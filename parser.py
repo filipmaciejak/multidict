@@ -3,7 +3,9 @@ from bs4 import BeautifulSoup
 from bs4 import Comment
 
 class Parser(object):
+
     def __init__(self, lang):
+
         self.url = "https://en.wiktionary.org/wiki/{}?printable=yes"
         self.soup = None
         self.session = requests.Session()
@@ -14,13 +16,17 @@ class Parser(object):
         self.result = ''
     
     def get_data(self):
+
         response = self.session.get(self.url.format(self.word))
         if response.status_code != 200:
             return False
         self.soup = BeautifulSoup(response.text, 'html.parser')
+        
         return True
 
     def fetch(self):
+
+        # downloading data
         try:
             tmp = self.get_data()
         except:
@@ -31,6 +37,8 @@ class Parser(object):
         if span == None:
             return '<h2>Word not found :(</h2>'
         h2 = span.parent
+
+        # cleaning data
         for tag in ['table', 'sup', 'hr']:
             for i in self.soup.find_all(tag):
                 i.extract()
@@ -49,6 +57,8 @@ class Parser(object):
             if 'Further_reading' in i['id']:
                 i.parent.find_next('ul').extract()
                 i.parent.extract()
+
+        # combining data
         html = ''
         for tag in h2.next_siblings:
             if tag.name == "h2":
@@ -57,4 +67,5 @@ class Parser(object):
                 if not isinstance(tag, Comment):
                     html += str(tag)
         self.result = html
+
         return self.result
