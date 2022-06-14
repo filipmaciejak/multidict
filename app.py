@@ -73,8 +73,7 @@ class Ui(QtWidgets.QMainWindow):
             self.favButton.setText('★')
     
     def f_actionFav(self):
-
-        if self.parser.word == None:
+        if self.lineEdit.text().strip() == '' or self.lineEdit.text() != self.parser.word:
             return
 
         if self.parser.word in self.saved_words[self.parser.lang]:
@@ -230,7 +229,7 @@ class Ui(QtWidgets.QMainWindow):
         with open('config.json', 'w', encoding='utf-8') as f:
             self.preferences['user'] = self.user
             json.dump(self.preferences, f, ensure_ascii=False, indent=4)
-            
+
         event.accept()
 
 if __name__ == "__main__":
